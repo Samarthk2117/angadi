@@ -1,145 +1,95 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
-import { ShieldAlert, LogOut, Send, Clock, Tag } from 'lucide-react';
+import { Shield, Users, Gamepad2, BookOpen, MessageSquareWarning } from 'lucide-react';
 
 const Dashboard = () => {
-  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  
-  const [posts, setPosts] = useState([]);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [tag, setTag] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const fetchPosts = async () => {
-    try {
-      const res = await api.get('/posts');
-      setPosts(res.data);
-    } catch (err) {
-      console.error('Error fetching posts:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
-  const handleCreatePost = async (e) => {
-    e.preventDefault();
-    if (!title || !description) {
-      setError('Title and description are required.');
-      return;
-    }
-    
-    setLoading(true);
-    setError('');
-
-    try {
-      // Sending request without auth requirement as per user request
-      await api.post('/posts', { title, description, tag });
-      setTitle('');
-      setDescription('');
-      setTag('');
-      fetchPosts(); // Refresh feed
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create post');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <nav className="flex justify-between items-center pb-8 mb-8 border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <ShieldAlert size={32} className="text-[#00f3ff]" />
-          <h1 className="text-2xl font-bold text-[#00f3ff]">CyberHub Feed</h1>
+    <div className="min-h-screen bg-[#0a0a0a] text-white p-8 md:p-16 flex flex-col items-center">
+      
+      {/* Header Section */}
+      <div className="w-full max-w-6xl mb-12">
+        <div className="flex items-center gap-2 mb-8">
+          <Shield size={28} className="text-[#aa3bff]" />
+          <span className="text-xl font-bold tracking-wide">Sentinel</span>
         </div>
-        
-        {user ? (
-          <button className="btn-secondary gap-2 px-4 py-2" onClick={handleLogout}>
-            <LogOut size={18} /> Logout
-          </button>
-        ) : (
-          <button className="btn-primary px-6 py-2" onClick={() => navigate('/login')}>
-            Login
-          </button>
-        )}
-      </nav>
-
-      <div className="glass-panel p-8 mb-8">
-        <h2 className="text-xl font-semibold mb-6">Broadcast an Alert</h2>
-        {error && <div className="text-red-400 text-sm bg-red-500/10 p-3 rounded-lg border border-red-500/20 mb-4">{error}</div>}
-        
-        <form onSubmit={handleCreatePost} className="flex flex-col gap-4">
-          <input 
-            type="text" 
-            className="input-field"
-            placeholder="Vulnerability Title..." 
-            value={title} 
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <textarea 
-            rows="4" 
-            className="input-field resize-y"
-            placeholder="Describe the threat vectors or share intelligence..."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
-          
-          <div className="flex flex-col sm:flex-row gap-4 items-center">
-            <div className="w-full flex-1">
-              <input 
-                type="text" 
-                className="input-field"
-                placeholder="Tag (e.g. Malware, Phishing)" 
-                value={tag} 
-                onChange={(e) => setTag(e.target.value)}
-              />
-            </div>
-            <button type="submit" className="btn-primary w-full sm:w-auto" disabled={loading}>
-              <Send size={18} /> {loading ? 'Broadcasting...' : 'Post'}
-            </button>
-          </div>
-        </form>
+        <h1 className="text-5xl md:text-6xl font-bold mb-4 leading-tight">
+          Everything you need to stay safe<br/>online
+        </h1>
+        <p className="text-gray-400 text-lg">
+          Four pillars to build real cybersecurity instinct — not just trivia.
+        </p>
       </div>
 
-      <div className="flex flex-col gap-6">
-        <h2 className="text-xl font-semibold text-gray-400 mb-2">Latest Intelligence</h2>
+      {/* Grid Section */}
+      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         
-        {posts.length === 0 ? (
-          <div className="glass-panel p-12 text-center text-gray-400">
-            No intel available. Be the first to broadcast.
+        {/* Card 1: Community */}
+        <div 
+          onClick={() => navigate('/community')}
+          className="bg-[#12121a] border border-white/5 rounded-2xl p-6 cursor-pointer transition-all hover:-translate-y-1 hover:border-[#aa3bff]/50 group flex flex-col"
+        >
+          <div className="bg-[#1a1a2e] w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+            <Users size={24} className="text-[#aa3bff]" />
           </div>
-        ) : (
-          posts.map(post => (
-            <div key={post.id} className="glass-panel p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/20">
-              <h3 className="text-xl font-semibold mb-2 text-white">{post.title}</h3>
-              <div className="flex items-center gap-4 text-xs text-gray-400 mb-4">
-                {post.tag && (
-                  <span className="flex items-center gap-1 bg-[#b026ff]/15 text-[#b026ff] px-2.5 py-1 rounded-md font-semibold">
-                    <Tag size={12} /> {post.tag}
-                  </span>
-                )}
-                <span className="flex items-center gap-1">
-                  <Clock size={12} />
-                  {post.createdAt ? new Date(post.createdAt._seconds * 1000).toLocaleString() : 'Just now'}
-                </span>
-              </div>
-              <p className="text-gray-300 leading-relaxed">{post.description}</p>
-            </div>
-          ))
-        )}
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Community</p>
+          <h2 className="text-xl font-bold text-white mb-3">Community</h2>
+          <p className="text-sm text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors">
+            Share scams you've spotted, ask questions, upvote the best advice — Twitter meets Reddit for cybersecurity.
+          </p>
+        </div>
+
+        {/* Card 2: Spot the Scam */}
+        <div className="bg-[#12121a] border border-white/5 rounded-2xl p-6 opacity-70 cursor-not-allowed flex flex-col">
+          <div className="bg-[#1a1a2e] w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+            <Gamepad2 size={24} className="text-[#aa3bff]" />
+          </div>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Game</p>
+          <h2 className="text-xl font-bold text-white mb-3">Spot the Scam</h2>
+          <p className="text-sm text-gray-400 leading-relaxed">
+            Gamified training: real-world examples — guess spam vs. legit, fraud vs. safe. Build instinct fast.
+          </p>
+        </div>
+
+        {/* Card 3: Learn Hub */}
+        <div className="bg-[#12121a] border border-white/5 rounded-2xl p-6 opacity-70 cursor-not-allowed flex flex-col">
+          <div className="bg-[#1a1a2e] w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+            <BookOpen size={24} className="text-[#aa3bff]" />
+          </div>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Library</p>
+          <h2 className="text-xl font-bold text-white mb-3">Learn Hub</h2>
+          <p className="text-sm text-gray-400 leading-relaxed">
+            Videos, articles, FAQs and full courses uploaded by trusted creators. Always growing.
+          </p>
+        </div>
+
+        {/* Card 4: AI Phishing Tutor */}
+        <div className="bg-[#12121a] border border-white/5 rounded-2xl p-6 opacity-70 cursor-not-allowed flex flex-col">
+          <div className="bg-[#1a1a2e] w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+            <MessageSquareWarning size={24} className="text-[#aa3bff]" />
+          </div>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Always-On</p>
+          <h2 className="text-xl font-bold text-white mb-3">AI Phishing Tutor</h2>
+          <p className="text-sm text-gray-400 leading-relaxed">
+            Paste any suspicious email. Sentinel breaks down red flags and teaches you the pattern.
+          </p>
+        </div>
+
       </div>
+
+      {/* Bottom Banner */}
+      <div className="w-full max-w-6xl">
+        <div className="bg-gradient-to-r from-[#12121a] to-[#1a1a2e] border border-white/5 rounded-3xl p-10 relative overflow-hidden">
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
+            <Shield size={48} className="text-[#aa3bff]" />
+            <h2 className="text-3xl md:text-4xl font-bold text-white">Start your training in 60 seconds</h2>
+          </div>
+          {/* subtle glow effect */}
+          <div className="absolute right-0 bottom-0 w-64 h-64 bg-[#aa3bff]/20 blur-[100px] rounded-full pointer-events-none"></div>
+        </div>
+      </div>
+
     </div>
   );
 };
