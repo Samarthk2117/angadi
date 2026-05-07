@@ -34,76 +34,53 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="glass-panel w-full max-w-md p-10 flex flex-col gap-6">
-        <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <Shield size={48} className="text-[#00f3ff]" />
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-10 sm:px-8">
+      <div className="pointer-events-none absolute inset-0 opacity-75">
+        <div className="absolute -left-20 top-16 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl" />
+        <div className="absolute -right-16 bottom-10 h-80 w-80 rounded-full bg-fuchsia-500/20 blur-3xl" />
+      </div>
+
+      <div className="glass-panel relative w-full max-w-md p-8 sm:p-10">
+        <div className="mb-6 text-center">
+          <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-300/40 bg-cyan-300/10">
+            <Shield size={30} className="text-cyan-300" />
           </div>
-          <h1 className="text-3xl font-bold mb-2 bg-gradient-to-br from-[#00f3ff] to-[#b026ff] bg-clip-text text-transparent">
+          <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400">
             CyberHub
           </h1>
-          <p className="text-gray-400">{isLogin ? 'Welcome back, operator.' : 'Join the resistance.'}</p>
+          <p className="text-gray-300">{isLogin ? 'Welcome back, operator.' : 'Join the resistance.'}</p>
         </div>
 
-        {error && (
-          <div className="text-red-400 text-sm bg-red-500/10 p-3 rounded-lg border border-red-500/20">
-            {error}
-          </div>
-        )}
+        {error && <div className="mb-4 rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">{error}</div>}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-gray-400">Alias</label>
-              <input
-                type="text"
-                className="input-field"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Neo"
-                required
-              />
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-300">Alias</label>
+              <input type="text" className="input-field" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Neo" required />
             </div>
           )}
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-400">Email</label>
-            <input
-              type="email"
-              className="input-field"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="neo@matrix.com"
-              required
-            />
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Email</label>
+            <input type="email" className="input-field" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="neo@matrix.com" required />
           </div>
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-400">Password</label>
-            <input
-              type="password"
-              className="input-field"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-            />
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Password</label>
+            <input type="password" className="input-field" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="........" required />
           </div>
-          
-          <button type="submit" className="btn-primary mt-4" disabled={loading}>
-            {loading ? 'Processing...' : (isLogin ? 'Initialize Session' : 'Register Securely')}
+
+          <button type="submit" className="btn-primary mt-2 w-full" disabled={loading}>
+            {loading ? 'Processing...' : isLogin ? 'Initialize Session' : 'Register Securely'}
           </button>
         </form>
 
-        <div className="text-center mt-2">
-          <p className="text-sm text-gray-400">
-            {isLogin ? "Don't have an access code? " : "Already registered? "}
-            <button 
-              className="text-[#00f3ff] font-semibold hover:underline"
-              onClick={() => setIsLogin(!isLogin)}
-            >
-              {isLogin ? 'Sign up' : 'Log in'}
-            </button>
-          </p>
+        <div className="mt-5 text-center text-sm text-gray-300">
+          {isLogin ? "Don't have an access code? " : 'Already registered? '}
+          <button className="font-semibold text-cyan-300 hover:underline" onClick={() => setIsLogin(!isLogin)}>
+            {isLogin ? 'Sign up' : 'Log in'}
+          </button>
         </div>
       </div>
     </div>

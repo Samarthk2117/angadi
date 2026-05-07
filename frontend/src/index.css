@@ -3,25 +3,43 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    @apply box-border;
+  }
+
   body {
-    @apply bg-[#0a0a0a] text-white antialiased min-h-screen;
-    background-image: radial-gradient(circle at top right, rgba(0, 243, 255, 0.05), transparent 40%),
-                      radial-gradient(circle at bottom left, rgba(176, 38, 255, 0.05), transparent 40%);
+    @apply m-0 min-h-screen text-white antialiased;
+    background:
+      radial-gradient(80rem 35rem at -10% -10%, rgba(12, 212, 255, 0.22), transparent 60%),
+      radial-gradient(65rem 35rem at 110% 0%, rgba(255, 69, 149, 0.17), transparent 58%),
+      radial-gradient(80rem 32rem at 50% 120%, rgba(97, 70, 255, 0.26), transparent 60%),
+      #06070f;
     background-attachment: fixed;
+  }
+
+  #root {
+    min-height: 100vh;
   }
 }
 
 @layer components {
   .glass-panel {
-    @apply bg-[#1a1a1a]/60 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl;
+    @apply rounded-2xl border border-white/15 bg-white/[0.04] shadow-[0_18px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl;
   }
+
   .input-field {
-    @apply w-full px-4 py-3 bg-black/20 border border-white/10 rounded-lg text-white transition-all duration-300 focus:outline-none focus:border-[#00f3ff] focus:ring-1 focus:ring-[#00f3ff]/50;
+    @apply w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-white transition duration-300 placeholder:text-gray-500 focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-300/30;
   }
+
   .btn-primary {
-    @apply flex items-center justify-center px-6 py-3 gap-2 rounded-lg font-semibold bg-gradient-to-br from-[#00f3ff] to-[#b026ff] text-white shadow-[0_4px_15px_rgba(0,243,255,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(0,243,255,0.4)] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 via-sky-500 to-fuchsia-500 px-6 py-3 font-semibold text-white shadow-[0_14px_35px_rgba(5,176,255,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_45px_rgba(5,176,255,0.5)] disabled:cursor-not-allowed disabled:opacity-70;
   }
+
   .btn-secondary {
-    @apply flex items-center justify-center px-6 py-3 gap-2 rounded-lg font-semibold bg-transparent border border-white/10 text-white transition-all duration-300 hover:bg-white/5;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-6 py-3 font-semibold text-white transition-all duration-300 hover:bg-white/10;
   }
 }

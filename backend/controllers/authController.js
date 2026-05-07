@@ -1,4 +1,4 @@
-const { admin } = require('../config/firebase.js');
+const { admin, db } = require('../config/firebase.js');
 
 // @desc    Register a new user
 // @route   POST /api/auth/signup
@@ -13,6 +13,18 @@ const signup = async (req, res, next) => {
       password,
       displayName
     });
+
+    await db.collection('users').doc(userRecord.uid).set(
+      {
+        uid: userRecord.uid,
+        email,
+        displayName: displayName || '',
+        alertsEnabled: true,
+        alertInterval: '2min',
+        createdAt: admin.firestore.Timestamp.now(),
+      },
+      { merge: true }
+    );
 
     res.status(201).json({
       message: 'User created successfully',
